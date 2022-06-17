@@ -1,10 +1,152 @@
-package Models
+package models
 
 import (
+	"context"
 	"database/sql"
+	"time"
 )
 
-func (task *SingleTask) getSingleTask(db *sql.DB) {
+func GetTaskList(db *sql.DB, userId string, date int) (*[]SingleTask, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "SELECT * FROM `alltasks` WHERE `userId` = ? AND `dailyLogDate` = ?"
+
+	//QueryContext expects one or more rows
+	rows, err := db.QueryContext(ctx, query, userId, date)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var taskList []SingleTask
+	for rows.Next() {
+		var st SingleTask
+		err := rows.Scan(
+			&st.Id,
+			&st.DailyLogDate,
+			&st.Type,
+			&st.Description,
+			&st.IsCompleted,
+			&st.Effort,
+			&st.Priority,
+			&st.UserId,
+			&st.ParentId,
+			&st.Progress,
+			&st.Deadline,
+		)
+		if err != nil {
+			return nil, err
+		}
+		taskList = append(taskList, st)
+	}
+
+	return &taskList, err
 	
 }
 
+func (st *SingleTask) GetSingleTask(db *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "SELECT * FROM `alltasks` WHERE `id` = ?"
+
+	//QueryRowContext expect to return at most 1 row
+	row := db.QueryRowContext(ctx, query, st.Id)
+
+	err := row.Scan(
+		&st.Id,
+		&st.DailyLogDate,
+		&st.Type,
+		&st.Description,
+		&st.IsCompleted,
+		&st.Effort,
+		&st.Priority,
+		&st.UserId,
+		&st.ParentId,
+		&st.Progress,
+		&st.Deadline,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil 
+}
+
+func (st *SingleTaskPayLoad) CreateSingleTask(db *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	//need to check if this is best way to generate UUID()
+	query := "INSERT INTO `alltasks` VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+	//todo check why this is empty
+	_, err := db.ExecContext(ctx, query, 
+		st.DailyLogDate,
+		st.Type,
+		st.Description,
+		st.IsCompleted,
+		st.Effort,
+		st.Priority,
+		st.UserId,
+		st.ParentId,
+		st.Progress,
+		st.Deadline,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (st *SingleTask) UpdateTask(db *sql.DB) error { 
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	//todo need to check order of the newly created database
+	query := `UPDATE alltasks SET 
+	dailyLogDate = ?, 
+	description = ?, 
+	taskType = ?, 
+	effort = ?, 
+	isCompleted = ?,
+	priority = ?,
+	parentId = ?, 
+	progress = ?,
+	deadline = ? 
+	WHERE id = ?;`
+
+	_, err := db.ExecContext(ctx, query, 
+		st.DailyLogDate,
+		st.Description,
+		st.Type,
+		st.Effort,
+		st.IsCompleted,
+		st.Priority,
+		st.ParentId,
+		st.Progress,
+		st.Deadline,
+		st.Id,)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (st *SingleTask) DeleteTask(db *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "DELETE FROM `alltasks` WHERE `id` = ?"
+
+	_, err := db.ExecContext(ctx, query, st.Id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
