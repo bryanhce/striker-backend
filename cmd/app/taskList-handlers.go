@@ -1,7 +1,7 @@
 package app
 
 import (
-	"backend/models"
+	"backend/cmd/models"
 	"database/sql"
 	"encoding/json"
 	"fmt"
