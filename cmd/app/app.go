@@ -2,7 +2,6 @@ package app
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -25,15 +24,12 @@ func (a *App) Initialize() {
     if err != nil {
         log.Fatal(err)
     }
-	fmt.Println("connected to database")
-	// defer a.DB.Close()
 
     a.Router = mux.NewRouter()  
 
 	a.InitializeRoutes()
 }
 
-//figure out why addr param not used
 func (a *App) Run(addr string) { 
-	log.Fatal(http.ListenAndServe(":8000", a.Router))
+	log.Fatal(http.ListenAndServe(addr, a.Router))
 }

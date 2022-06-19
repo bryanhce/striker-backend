@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -14,14 +14,31 @@ import (
 func (a *App) GetTaskList(w http.ResponseWriter, r *http.Request) {
 	userId := mux.Vars(r)["userId"] //path param
 	dateStr := r.URL.Query().Get("date") //query param
-	dateInt, err := strconv.Atoi(dateStr)
-	if err != nil {
-		respondWithError(w, http.StatusNotFound, "date is invalid")
+
+	dateArr := strings.Split(dateStr, "-")
+	year := dateArr[0]
+	month := dateArr[1]
+	day := dateArr[2]
+
+	if !validateYear(year) {
+		respondWithError(w, http.StatusNotFound, "year is invalid")
+		return
 	}
 
-	taskList, err := models.GetTaskList(a.DB, userId, dateInt)
+	if !validateMonth(month) {
+		respondWithError(w, http.StatusNotFound, "month is invalid")
+		return
+	}
+
+	if !validateDay(day, month) {
+		respondWithError(w, http.StatusNotFound, "day is invalid")
+		return
+	}
+
+	taskList, err := models.GetTaskList(a.DB, userId, dateStr)
 	if err != nil {
 		respondWithError(w, http.StatusNotFound, err.Error())
+		return
 	}
 
 	respondWithJSON(w, http.StatusOK, taskList)
@@ -31,9 +48,7 @@ func (a *App) GetSingleTask(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 
-	fmt.Println(id)
 	singleTask := models.SingleTask{Id: id}
-	fmt.Println(singleTask)
 	err := singleTask.GetSingleTask(a.DB)
 	if err != nil {
 		switch err {
@@ -46,20 +61,34 @@ func (a *App) GetSingleTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusOK, singleTask)
-	
 }
 
 func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 	dateStr := r.URL.Query().Get("date") //query param
-	dateInt, err := strconv.Atoi(dateStr)
-	if err != nil {
-		respondWithError(w, http.StatusNotFound, "date is invalid")
+	dateArr := strings.Split(dateStr, "-")
+	year := dateArr[0]
+	month := dateArr[1]
+	day := dateArr[2]
+
+	if !validateYear(year) {
+		respondWithError(w, http.StatusNotFound, "year is invalid")
 		return
 	}
-	newTask := models.SingleTaskPayLoad{DailyLogDate: dateInt}
+
+	if !validateMonth(month) {
+		respondWithError(w, http.StatusNotFound, "month is invalid")
+		return
+	}
+
+	if !validateDay(day, month) {
+		respondWithError(w, http.StatusNotFound, "day is invalid")
+		return
+	}
+
+	newTask := models.SingleTaskPayLoad{DailyLogDate: dateStr}
 	var holder map[string]interface{}
 
-	err = json.NewDecoder(r.Body).Decode(&holder)
+	err := json.NewDecoder(r.Body).Decode(&holder)
 	if (err != nil) {
 		fmt.Println(err.Error())
 		respondWithError(w, http.StatusBadRequest, "invalid request payload")
@@ -111,7 +140,7 @@ func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 	if (holder["deadline"] == nil) {
 		newTask.IsCompleted.Scan(nil)
 	} else {
-		newTask.Deadline.Scan(int(holder["deadline"].(float64)))
+		newTask.Deadline.Scan(holder["deadline"].(string))
 	}
 
 	err = newTask.CreateSingleTask(a.DB)
@@ -143,7 +172,7 @@ func (a *App) UpdateSingleTask(w http.ResponseWriter, r *http.Request) {
 
 	//no check for userId and id as they do not change
 	if (holder["dailyLogDate"] != nil) {
-		updatedTask.DailyLogDate = (int(holder["dailyLogDate"].(float64)))
+		updatedTask.DailyLogDate = (holder["dailyLogDate"].(string))
 	}
 
 	if (holder["taskType"] != nil) {
@@ -175,7 +204,7 @@ func (a *App) UpdateSingleTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if (holder["deadline"] != nil) {
-		updatedTask.Deadline.Scan(int(holder["deadline"].(float64)))
+		updatedTask.Deadline.Scan(holder["deadline"].(string))
 	}
 
 
@@ -197,5 +226,4 @@ func (a *App) DeleteSingleTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "delete successful"})
-	
 }

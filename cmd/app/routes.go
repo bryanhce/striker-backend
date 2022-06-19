@@ -1,12 +1,18 @@
 package app
 
 func (a *App) InitializeRoutes() {
-	a.Router.HandleFunc("/test/{id:}", TestHandler).Methods("GET")
+	a.Router.HandleFunc("/test", TestHandler).Methods("GET")
 	a.Router.HandleFunc("/task-list/single-task/{id:[a-z0-9-]+}", a.GetSingleTask).Methods("GET")
 	a.Router.HandleFunc("/task-list/single-task/{id:[a-z0-9-]+}", a.UpdateSingleTask).Methods("PUT")
 	a.Router.HandleFunc("/task-list/single-task/{id:[a-z0-9-]+}", a.DeleteSingleTask).Methods("DELETE")
-	a.Router.HandleFunc("/task-list/single-task", a.CreateSingleTask).Methods("POST") //has query params date as well
-	a.Router.HandleFunc("/task-list/{userId:[A-Za-z0-9]+}", a.GetTaskList).Methods("GET") //has query params date as well
+	//has query param date
+	a.Router.HandleFunc("/task-list/single-task", a.CreateSingleTask).Methods("POST") 
+	//has query param date
+	a.Router.HandleFunc("/task-list/{userId:[A-Za-z0-9]+}", a.GetTaskList).Methods("GET")
+	//has query param year-month 
+	a.Router.HandleFunc("/calendar/{userId:[A-Za-z0-9]+}", a.GetMonthlyTasks).Methods("GET") 
+	//has query param start-date & end-date
+	a.Router.HandleFunc("/analytics/{userId:[A-Za-z0-9]+}", a.GetAnalytics).Methods("GET") 
 }
 
 /*

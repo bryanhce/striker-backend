@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GetTaskList(db *sql.DB, userId string, date int) (*[]SingleTask, error) {
+func GetTaskList(db *sql.DB, userId string, date string) (*[]SingleTask, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -79,10 +79,8 @@ func (st *SingleTaskPayLoad) CreateSingleTask(db *sql.DB) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	//need to check if this is best way to generate UUID()
 	query := "INSERT INTO `alltasks` VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-	//todo check why this is empty
 	_, err := db.ExecContext(ctx, query, 
 		st.DailyLogDate,
 		st.Type,
@@ -106,13 +104,12 @@ func (st *SingleTask) UpdateTask(db *sql.DB) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	//todo need to check order of the newly created database
 	query := `UPDATE alltasks SET 
 	dailyLogDate = ?, 
-	description = ?, 
 	taskType = ?, 
-	effort = ?, 
+	description = ?, 
 	isCompleted = ?,
+	effort = ?, 
 	priority = ?,
 	parentId = ?, 
 	progress = ?,
@@ -121,10 +118,10 @@ func (st *SingleTask) UpdateTask(db *sql.DB) error {
 
 	_, err := db.ExecContext(ctx, query, 
 		st.DailyLogDate,
-		st.Description,
 		st.Type,
-		st.Effort,
+		st.Description,
 		st.IsCompleted,
+		st.Effort,
 		st.Priority,
 		st.ParentId,
 		st.Progress,

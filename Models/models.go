@@ -9,7 +9,7 @@ type Users struct {
 
 type SingleTask struct {
 	Id string `json:"id"`
-	DailyLogDate int `json:"dailyLogDate"`
+	DailyLogDate string `json:"dailyLogDate"`
 	Type int `json:"taskType"`
 	Description string `json:"description"`
 	IsCompleted sql.NullBool `json:"isCompleted"`
@@ -18,18 +18,12 @@ type SingleTask struct {
 	UserId string `json:"userId"`
 	ParentId sql.NullString `json:"parentId"`
 	Progress sql.NullInt64 `json:"progress"`
-	Deadline sql.NullInt64 `json:"deadline"`
-}
-
-//todo check if this is being used
-type TaskList struct {
-	UserId string `json:"userId"`
-	MultipleTasks []SingleTask `json:"multipleTasks"`
+	Deadline sql.NullString `json:"deadline"`
 }
 
 //ID not generated as it is done by mysql
 type SingleTaskPayLoad struct {
-	DailyLogDate int `json:"dailyLogDate"`
+	DailyLogDate string `json:"dailyLogDate"`
 	Type int `json:"taskType"`
 	Description string `json:"description"`
 	IsCompleted sql.NullBool `json:"isCompleted"`
@@ -38,5 +32,14 @@ type SingleTaskPayLoad struct {
 	UserId string `json:"userId"`
 	ParentId sql.NullString `json:"parentId"`
 	Progress sql.NullInt64 `json:"progress"`
-	Deadline sql.NullInt64 `json:"deadline"`
+	Deadline sql.NullString `json:"deadline"`
 } 
+
+type AnalyticsBreakdown struct {
+	Assignments int `json:"assignments"`
+	Events int `json:"events"`
+	Notes int `json:"notes"`
+	TotalEffort int `json:"totalEffort"`
+	TotalCompletedEvents int `json:"totalCompletedevents"`
+	TotalCompletedEffort int `json:"TotalCompletedEffort"`
+}
