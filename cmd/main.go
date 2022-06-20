@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"backend/cmd/app"
 )
@@ -13,7 +14,9 @@ func main() {
 
 	a.Initialize()
 
-	a.Run(":8000")
+	port := os.Getenv("PORT")
+	// port := "8000"
+	a.Run(":" + port)
 
 	defer a.DB.Close()
 }
