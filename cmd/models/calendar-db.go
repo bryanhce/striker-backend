@@ -36,6 +36,7 @@ func GetMonthlyTasks(db *sql.DB, userId, startDate, endDate string) (*[]SingleTa
 			&st.ParentId,
 			&st.Progress,
 			&st.Deadline,
+			&st.HasChildren,
 		)
 		if err != nil {
 			return nil, err

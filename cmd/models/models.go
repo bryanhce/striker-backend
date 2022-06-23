@@ -19,6 +19,7 @@ type SingleTask struct {
 	ParentId sql.NullString `json:"parentId"`
 	Progress sql.NullInt64 `json:"progress"`
 	Deadline sql.NullString `json:"deadline"`
+	HasChildren bool `json:"hasChildren"`
 }
 
 //ID not generated as it is done by mysql
@@ -33,6 +34,7 @@ type SingleTaskPayLoad struct {
 	ParentId sql.NullString `json:"parentId"`
 	Progress sql.NullInt64 `json:"progress"`
 	Deadline sql.NullString `json:"deadline"`
+	HasChildren bool `json:"hasChildren"`
 } 
 
 type AnalyticsBreakdown struct {
