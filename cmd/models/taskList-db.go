@@ -34,6 +34,7 @@ func GetTaskList(db *sql.DB, userId string, date string) (*[]SingleTask, error) 
 			&st.ParentId,
 			&st.Progress,
 			&st.Deadline,
+			&st.HasChildren,
 		)
 		if err != nil {
 			return nil, err
@@ -66,6 +67,7 @@ func (st *SingleTask) GetSingleTask(db *sql.DB) error {
 		&st.ParentId,
 		&st.Progress,
 		&st.Deadline,
+		&st.HasChildren,
 	)
 
 	if err != nil {
@@ -92,6 +94,7 @@ func (st *SingleTaskPayLoad) CreateSingleTask(db *sql.DB) error {
 		st.ParentId,
 		st.Progress,
 		st.Deadline,
+		st.HasChildren,
 	)
 	if err != nil {
 		return err
@@ -113,7 +116,8 @@ func (st *SingleTask) UpdateTask(db *sql.DB) error {
 	priority = ?,
 	parentId = ?, 
 	progress = ?,
-	deadline = ? 
+	deadline = ?,
+	hasChildren = ? 
 	WHERE id = ?;`
 
 	_, err := db.ExecContext(ctx, query, 
@@ -126,6 +130,7 @@ func (st *SingleTask) UpdateTask(db *sql.DB) error {
 		st.ParentId,
 		st.Progress,
 		st.Deadline,
+		st.HasChildren,
 		st.Id,)
 	if err != nil {
 		return err

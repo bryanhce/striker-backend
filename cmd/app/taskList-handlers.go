@@ -106,6 +106,7 @@ func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 	newTask.Type = int(holder["taskType"].(float64))
 	newTask.Description = holder["description"].(string)
 	newTask.UserId = holder["userId"].(string)
+	newTask.HasChildren = holder["hasChildren"].(bool)
 
 	if (holder["isCompleted"] == nil) {
 		newTask.IsCompleted.Scan(nil)
@@ -207,6 +208,9 @@ func (a *App) UpdateSingleTask(w http.ResponseWriter, r *http.Request) {
 		updatedTask.Deadline.Scan(holder["deadline"].(string))
 	}
 
+	if (holder["hasChildren"] != nil) {
+		updatedTask.Deadline.Scan(holder["hasChildren"].(bool))
+	}
 
 	err = updatedTask.UpdateTask(a.DB)
 	if err != nil {
