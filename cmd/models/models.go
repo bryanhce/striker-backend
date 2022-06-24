@@ -42,6 +42,6 @@ type AnalyticsBreakdown struct {
 	Events int `json:"events"`
 	Notes int `json:"notes"`
 	TotalEffort int `json:"totalEffort"`
-	TotalCompletedEvents int `json:"totalCompletedevents"`
-	TotalCompletedEffort int `json:"TotalCompletedEffort"`
+	TotalCompletedEvents int `json:"totalCompletedEvents"`
+	TotalCompletedEffort int `json:"totalCompletedEffort"`
 }
