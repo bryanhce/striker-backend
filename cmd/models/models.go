@@ -4,7 +4,7 @@ import "database/sql"
 
 type Users struct {
 	UserId string `json:"userId"`
-	Dependencies []string `json:"dependencies"`
+	Dependencies string `json:"dependencies"`
 }
 
 type SingleTask struct {
