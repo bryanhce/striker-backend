@@ -35,5 +35,6 @@ func (a *App) Run(addr string) {
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	methods := handlers.AllowedHeaders([]string{"GET", "POST", "PUT", "DELETE"})
 	origins := handlers.AllowedOrigins([]string{"*"})
-	log.Fatal(http.ListenAndServe(addr, handlers.CORS(headers, methods, origins)(a.Router)))
+	credentials := handlers.AllowCredentials()
+	log.Fatal(http.ListenAndServe(addr, handlers.CORS(headers, methods, origins, credentials)(a.Router)))
 }
