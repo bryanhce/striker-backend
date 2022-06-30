@@ -45,3 +45,7 @@ type AnalyticsBreakdown struct {
 	TotalCompletedEvents int `json:"totalCompletedEvents"`
 	TotalCompletedEffort int `json:"totalCompletedEffort"`
 }
+
+type LastLoginStruct struct {
+	LastLogin string `json:"lastLogin"`
+}
