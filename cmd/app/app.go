@@ -32,7 +32,7 @@ func (a *App) Initialize() {
 }
 
 func (a *App) Run(addr string) { 
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "Access-Control-Allow-Headers"})
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "Access-Control-Allow-Headers", "Assess-Control-Allow-Origin"})
 	methods := handlers.AllowedHeaders([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	credentials := handlers.AllowCredentials()
