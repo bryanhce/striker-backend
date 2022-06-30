@@ -209,7 +209,7 @@ func (a *App) UpdateSingleTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if (holder["hasChildren"] != nil) {
-		updatedTask.Deadline.Scan(holder["hasChildren"].(bool))
+		updatedTask.HasChildren = holder["hasChildren"].(bool)
 	}
 
 	err = updatedTask.UpdateTask(a.DB)
