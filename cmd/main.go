@@ -1,10 +1,9 @@
 package main
 
 import (
+	"backend/cmd/app"
 	"fmt"
 	"os"
-
-	"backend/cmd/app"
 )
 
 func main() {
