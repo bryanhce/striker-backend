@@ -4,6 +4,7 @@ import (
 	"backend/cmd/models"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	sendgrid "github.com/sendgrid/sendgrid-go"
@@ -27,8 +28,7 @@ func sendEmail(email, taskText string) error {
 	<br/>
 	<span>Team Head in the Clouds<span>`, taskText, date)
     message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-	apiKey := "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"
-    client := sendgrid.NewSendClient(apiKey)
+    client := sendgrid.NewSendClient(os.Getenv("API_KEY"))
     res, err := client.Send(message)
     if err != nil {
 		fmt.Println(res)
@@ -43,6 +43,10 @@ func (a *App) PostReminderEmails(w http.ResponseWriter, r *http.Request) {
 	emailList, err := models.GetReminderEmails(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+	if emailList == nil {
+		respondWithJSON(w, http.StatusOK, map[string]string{"result": "no emails to send"})
 		return
 	}
 

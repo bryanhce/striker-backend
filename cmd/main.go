@@ -4,6 +4,8 @@ import (
 	"backend/cmd/app"
 	"fmt"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -13,8 +15,11 @@ func main() {
 
 	a.Initialize()
 
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("could not load env file")
+	}
 	port := os.Getenv("PORT")
-	// port := "8000"
 	a.Run(":" + port)
 
 	defer a.DB.Close()

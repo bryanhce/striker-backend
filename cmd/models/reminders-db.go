@@ -23,6 +23,9 @@ func GetReminderEmails(db *sql.DB) (*[]ReminderEmail, error) {
 		return nil, err
 	}
 	defer rows.Close()
+	if rows == nil {
+		return nil, nil
+	}
 
 	var reminderEmailList []ReminderEmail
 	for rows.Next() {
