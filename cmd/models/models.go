@@ -49,3 +49,8 @@ type AnalyticsBreakdown struct {
 type LastLoginStruct struct {
 	LastLogin string `json:"lastLogin"`
 }
+
+type ReminderEmail struct {
+	Email string `json:"email"`
+	Description string `json:"description"`
+}
