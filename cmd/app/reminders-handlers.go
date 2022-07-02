@@ -21,7 +21,7 @@ func sendEmail(email, taskText string) error {
 	<h2>Hello!</h2>
 	<span>Just a friendly reminder the deadline for your tasks
 	 	<strong>%s</strong> 
-	are today, %s!</span>
+	is today, %s!</span>
 	<br/>
 	<br/>
 	<span>Stay productive,<span>
