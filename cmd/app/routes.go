@@ -13,6 +13,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/calendar/{userId:[A-Za-z0-9]+}", a.GetMonthlyTasks).Methods("GET") 
 	//has query param start-date & end-date
 	a.Router.HandleFunc("/analytics/{userId:[A-Za-z0-9]+}", a.GetAnalytics).Methods("GET") 
+	a.Router.HandleFunc("/analytics/all/{userId:[A-Za-z0-9]+}", a.GetAllAnalytics).Methods("GET") 
 	a.Router.HandleFunc("/new-user", a.CreateUser).Methods("POST")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.GetLastLogin).Methods("GET")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.UpdateLastLogin).Methods("PUT")

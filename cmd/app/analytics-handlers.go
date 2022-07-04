@@ -60,3 +60,14 @@ func (a *App) GetAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 	respondWithJSON(w, http.StatusOK, analyticsReport)
 }
+
+func (a *App) GetAllAnalytics(w http.ResponseWriter, r *http.Request) {
+	userId := mux.Vars(r)["userId"]
+
+	analyticsReport, err := models.GetAllAnalytics(a.DB, userId)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, analyticsReport)
+}
