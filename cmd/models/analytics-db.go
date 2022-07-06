@@ -11,35 +11,22 @@ func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBrea
 	defer cancel()
 
 	query := `SELECT COUNT(id) FROM alltasks
-				WHERE userId = ? 
-				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
-				AND taskType = 0
-				UNION
-				SELECT COUNT(id) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
 				AND dailyLogdate <= ?
-				AND taskType = 1
-				UNION 
-				SELECT COUNT(id) FROM alltasks
-				WHERE userId = ? 
-				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
-				AND taskType = 2
-				UNION
+				GROUP BY taskType
+				UNION ALL
 				SELECT SUM(effort) FROM alltasks
 				WHERE userId = ? 
 				AND dailyLogDate >= ?
 				AND dailyLogdate <= ?
-				UNION
+				UNION ALL
 				SELECT COUNT(id) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
 				AND dailyLogdate <= ?
 				AND isCompleted = 0
-				AND (taskType = 0 OR taskType = 1)
-				UNION
+				UNION ALL
 				SELECT SUM(effort) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
@@ -47,14 +34,12 @@ func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBrea
 				AND isCompleted = 0`
 
 
-	//fix this
 	rows, err := db.QueryContext(ctx, query, 
 					userId, startDate, endDate,
 					userId, startDate, endDate,
 					userId, startDate, endDate,
 					userId, startDate, endDate,
-					userId, startDate, endDate,
-					userId, startDate, endDate)
+					)
 	if err != nil {
 		return nil, err
 	}
@@ -103,32 +88,21 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 	defer cancel()
 
 	query := `SELECT COUNT(id) FROM alltasks
-				WHERE userId = ? 
-				AND taskType = 0
-				UNION
-				SELECT COUNT(id) FROM alltasks
-				WHERE userId = ?
-				AND taskType = 1
-				UNION 
-				SELECT COUNT(id) FROM alltasks
-				WHERE userId = ? 
-				AND taskType = 2
-				UNION
-				SELECT SUM(effort) FROM alltasks
-				WHERE userId = ? 
-				UNION
-				SELECT COUNT(id) FROM alltasks
-				WHERE userId = ?
-				AND isCompleted = 0
-				AND (taskType = 0 OR taskType = 1)
-				UNION
-				SELECT SUM(effort) FROM alltasks
-				WHERE userId = ?
-				AND isCompleted = 0`
+			WHERE userId = ?
+			GROUP BY taskType
+			UNION ALL
+			SELECT SUM(effort) FROM alltasks
+			WHERE userId = ?
+			UNION ALL
+			SELECT COUNT(id) FROM alltasks
+			WHERE userId = ?
+			AND isCompleted = 0
+			UNION ALL
+			SELECT SUM(effort) FROM alltasks
+			WHERE userId = ?
+			AND isCompleted = 0`
 
-
-	//fix this
-	rows, err := db.QueryContext(ctx, query, userId, userId, userId, userId, userId, userId)
+	rows, err := db.QueryContext(ctx, query, userId, userId, userId)
 	if err != nil {
 		return nil, err
 	}

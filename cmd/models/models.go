@@ -23,19 +23,19 @@ type SingleTask struct {
 }
 
 //ID not generated as it is done by mysql
-type SingleTaskPayLoad struct {
-	DailyLogDate string `json:"dailyLogDate"`
-	Type int `json:"taskType"`
-	Description string `json:"description"`
-	IsCompleted sql.NullBool `json:"isCompleted"`
-	Effort sql.NullInt64 `json:"effort"`
-	Priority sql.NullInt64 `json:"priority"`
-	UserId string `json:"userId"`
-	ParentId sql.NullString `json:"parentId"`
-	Progress sql.NullInt64 `json:"progress"`
-	Deadline sql.NullString `json:"deadline"`
-	HasChildren bool `json:"hasChildren"`
-} 
+// type SingleTaskPayLoad struct {
+// 	DailyLogDate string `json:"dailyLogDate"`
+// 	Type int `json:"taskType"`
+// 	Description string `json:"description"`
+// 	IsCompleted sql.NullBool `json:"isCompleted"`
+// 	Effort sql.NullInt64 `json:"effort"`
+// 	Priority sql.NullInt64 `json:"priority"`
+// 	UserId string `json:"userId"`
+// 	ParentId sql.NullString `json:"parentId"`
+// 	Progress sql.NullInt64 `json:"progress"`
+// 	Deadline sql.NullString `json:"deadline"`
+// 	HasChildren bool `json:"hasChildren"`
+// } 
 
 type AnalyticsBreakdown struct {
 	Assignments int `json:"assignments"`

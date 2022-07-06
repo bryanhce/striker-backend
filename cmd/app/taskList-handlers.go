@@ -85,7 +85,7 @@ func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newTask := models.SingleTaskPayLoad{DailyLogDate: dateStr}
+	newTask := models.SingleTask{DailyLogDate: dateStr}
 	var holder map[string]interface{}
 
 	err := json.NewDecoder(r.Body).Decode(&holder)
@@ -97,12 +97,13 @@ func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if (holder["description"] == nil) || (holder["taskType"] == nil) || 
-	(holder["userId"] == nil) {
+	(holder["userId"] == nil) || (holder["id"] == nil) || (holder["hasChildren"] == nil) {
 		respondWithError(w, http.StatusBadRequest, "invalid request payload")
 		return
 	}
 
 	//type casting from interface to specific type
+	newTask.Id = holder["id"].(string)
 	newTask.Type = int(holder["taskType"].(float64))
 	newTask.Description = holder["description"].(string)
 	newTask.UserId = holder["userId"].(string)
