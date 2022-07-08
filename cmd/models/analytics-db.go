@@ -100,9 +100,16 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 			UNION ALL
 			SELECT SUM(effort) FROM alltasks
 			WHERE userId = ?
-			AND isCompleted = 0`
+			AND isCompleted = 0
+			UNION ALL
+			SELECT AVG(temp.taskCount) FROM (
+			SELECT COUNT(id) as taskCount from alltasks 
+			WHERE userId = ?
+			AND effort != NULL AND priority != NULL
+			AND isCompleted = 1
+			GROUP BY dailyLogDate) as temp;`
 
-	rows, err := db.QueryContext(ctx, query, userId, userId, userId)
+	rows, err := db.QueryContext(ctx, query, userId, userId, userId, userId, userId)
 	if err != nil {
 		return nil, err
 	}
