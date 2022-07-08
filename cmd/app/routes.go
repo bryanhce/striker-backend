@@ -17,6 +17,10 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/new-user", a.CreateUser).Methods("POST")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.GetLastLogin).Methods("GET")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.UpdateLastLogin).Methods("PUT")
+	a.Router.HandleFunc("/dependencies/135/{userId:[A-Za-z0-9]+}", a.Update135).Methods("PUT")
+	a.Router.HandleFunc("/dependencies/pomodoro/{userId:[A-Za-z0-9]+}", a.UpdatePomodoro).Methods("PUT")
+	a.Router.HandleFunc("/dependencies/darkMode/{userId:[A-Za-z0-9]+}", a.UpdateDarkMode).Methods("PUT")
+	a.Router.HandleFunc("/dependencies/colourBlind/{userId:[A-Za-z0-9]+}", a.UpdateColourBlind).Methods("PUT")
 
 	//for cron job
 	a.Router.HandleFunc("/email-reminders", a.PostReminderEmails).Methods("GET")
