@@ -23,13 +23,13 @@ type SingleTask struct {
 }
 
 type AnalyticsBreakdown struct {
-	Assignments int `json:"assignments"`
-	Events int `json:"events"`
-	Notes int `json:"notes"`
-	TotalEffort int `json:"totalEffort"`
-	TotalCompletedEvents int `json:"totalCompletedEvents"`
-	TotalCompletedEffort int `json:"totalCompletedEffort"`
-	AverageDailyTaskCompleted int `json:"averageDailyTaskCompleted"`
+	Assignments float64 `json:"assignments"`
+	Events float64 `json:"events"`
+	Notes float64 `json:"notes"`
+	TotalEffort float64 `json:"totalEffort"`
+	TotalCompletedEvents float64 `json:"totalCompletedEvents"`
+	TotalCompletedEffort float64 `json:"totalCompletedEffort"`
+	AverageDailyTaskCompleted float64 `json:"averageDailyTaskCompleted"`
 }
 
 type LastLoginStruct struct {

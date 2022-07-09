@@ -2,6 +2,7 @@ package app
 
 import (
 	"backend/cmd/models"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -65,6 +66,7 @@ func (a *App) GetAllAnalytics(w http.ResponseWriter, r *http.Request) {
 	userId := mux.Vars(r)["userId"]
 
 	analyticsReport, err := models.GetAllAnalytics(a.DB, userId)
+	fmt.Println(analyticsReport)
 	if err != nil {
 		respondWithError(w, http.StatusNotFound, err.Error())
 		return

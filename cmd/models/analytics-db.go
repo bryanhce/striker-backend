@@ -49,30 +49,70 @@ func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBrea
 	var breakdown AnalyticsBreakdown
 	var scanErr error
 	for rows.Next() {
+		var tempFloat sql.NullFloat64
 		if count == 0 {
 			scanErr = rows.Scan(
-				&breakdown.Assignments,
+				&tempFloat,
 			)	
+			if tempFloat.Valid {
+				breakdown.Assignments = tempFloat.Float64
+			} else {
+				breakdown.Assignments = 0
+			}
 		} else if count == 1 {
 			scanErr = rows.Scan(
-				&breakdown.Events,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.Events = tempFloat.Float64
+			} else {
+				breakdown.Events = 0
+			}
 		} else if count == 2 {
 			scanErr = rows.Scan(
-				&breakdown.Notes,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.Notes = tempFloat.Float64
+			} else {
+				breakdown.Notes = 0
+			}
 		} else if count == 3 {
 			scanErr = rows.Scan(
-				&breakdown.TotalEffort,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalEffort = tempFloat.Float64
+			} else {
+				breakdown.TotalEffort = 0
+			}
 		} else if count == 4 {
 			scanErr = rows.Scan(
-				&breakdown.TotalCompletedEvents,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalCompletedEvents = tempFloat.Float64
+			} else {
+				breakdown.TotalCompletedEvents = 0
+			}
 		} else if count == 5 {
 			scanErr = rows.Scan(
-				&breakdown.TotalCompletedEffort,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalCompletedEffort = tempFloat.Float64
+			} else {
+				breakdown.TotalCompletedEffort = 0
+			}
+		} else if count == 6 {
+			scanErr = rows.Scan(
+				&tempFloat,
+			)
+			if tempFloat.Valid {
+				breakdown.AverageDailyTaskCompleted = tempFloat.Float64
+			} else {
+				breakdown.AverageDailyTaskCompleted = 0
+			}
 		}
 		if scanErr != nil {
 			return nil, err
@@ -119,30 +159,70 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 	var breakdown AnalyticsBreakdown
 	var scanErr error
 	for rows.Next() {
+		var tempFloat sql.NullFloat64
 		if count == 0 {
 			scanErr = rows.Scan(
-				&breakdown.Assignments,
+				&tempFloat,
 			)	
+			if tempFloat.Valid {
+				breakdown.Assignments = tempFloat.Float64
+			} else {
+				breakdown.Assignments = 0
+			}
 		} else if count == 1 {
 			scanErr = rows.Scan(
-				&breakdown.Events,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.Events = tempFloat.Float64
+			} else {
+				breakdown.Events = 0
+			}
 		} else if count == 2 {
 			scanErr = rows.Scan(
-				&breakdown.Notes,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.Notes = tempFloat.Float64
+			} else {
+				breakdown.Notes = 0
+			}
 		} else if count == 3 {
 			scanErr = rows.Scan(
-				&breakdown.TotalEffort,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalEffort = tempFloat.Float64
+			} else {
+				breakdown.TotalEffort = 0
+			}
 		} else if count == 4 {
 			scanErr = rows.Scan(
-				&breakdown.TotalCompletedEvents,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalCompletedEvents = tempFloat.Float64
+			} else {
+				breakdown.TotalCompletedEvents = 0
+			}
 		} else if count == 5 {
 			scanErr = rows.Scan(
-				&breakdown.TotalCompletedEffort,
+				&tempFloat,
 			)
+			if tempFloat.Valid {
+				breakdown.TotalCompletedEffort = tempFloat.Float64
+			} else {
+				breakdown.TotalCompletedEffort = 0
+			}
+		} else if count == 6 {
+			scanErr = rows.Scan(
+				&tempFloat,
+			)
+			if tempFloat.Valid {
+				breakdown.AverageDailyTaskCompleted = tempFloat.Float64
+			} else {
+				breakdown.AverageDailyTaskCompleted = 0
+			}
 		}
 		if scanErr != nil {
 			return nil, err
