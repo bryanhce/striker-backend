@@ -116,31 +116,31 @@ func (a *App) CreateSingleTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if (holder["effort"] == nil) {
-		newTask.IsCompleted.Scan(nil)
+		newTask.Effort.Scan(nil)
 	} else {
 		newTask.Effort.Scan(int(holder["effort"].(float64)))
 	}
 
 	if (holder["priority"] == nil) {
-		newTask.IsCompleted.Scan(nil)
+		newTask.Priority.Scan(nil)
 	} else {
 		newTask.Priority.Scan(int(holder["priority"].(float64)))
 	}
 
 	if (holder["parentId"] == nil) {
-		newTask.IsCompleted.Scan(nil)
+		newTask.ParentId.Scan(nil)
 	} else {
 		newTask.ParentId.Scan(holder["parentId"].(string))
 	}
 
 	if (holder["progress"] == nil) {
-		newTask.IsCompleted.Scan(nil)
+		newTask.Progress.Scan(nil)
 	} else {
 		newTask.Progress.Scan(int(holder["progress"].(float64)))
 	}
 
 	if (holder["deadline"] == nil) {
-		newTask.IsCompleted.Scan(nil)
+		newTask.Deadline.Scan(nil)
 	} else {
 		newTask.Deadline.Scan(holder["deadline"].(string))
 	}
