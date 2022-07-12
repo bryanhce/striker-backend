@@ -153,3 +153,17 @@ func (st *SingleTask) DeleteTask(db *sql.DB) error {
 
 	return nil
 }
+
+func DeleteAllTasks(db *sql.DB, uid string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "DELETE FROM `alltasks` WHERE `userId` = ?"
+
+	_, err := db.ExecContext(ctx, query, uid)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
