@@ -104,3 +104,40 @@ func (a *App) UpdateColourBlind(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "update successful"})
 }
+
+func (a *App) Get135(w http.ResponseWriter, r *http.Request) {
+	var uid string = mux.Vars(r)["userId"]
+
+	is135, err := models.Get135(a.DB, uid)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, is135)
+}
+
+func (a *App) GetPomodoro(w http.ResponseWriter, r *http.Request) {
+	var uid string = mux.Vars(r)["userId"]
+
+	isPomodoro, err := models.GetPomodoro(a.DB, uid)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, isPomodoro)
+}
+
+func (a *App) GetColourBlind(w http.ResponseWriter, r *http.Request) {
+	var uid string = mux.Vars(r)["userId"]
+
+	isColourBlind, err := models.GetColourBlind(a.DB, uid)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, isColourBlind)
+}
+

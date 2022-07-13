@@ -40,3 +40,7 @@ type ReminderEmail struct {
 	Email string `json:"email"`
 	Description string `json:"description"`
 }
+
+type DependencyStruct struct {
+	Dependency bool `json:"dependency"`
+}
