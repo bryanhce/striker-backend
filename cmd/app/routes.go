@@ -15,6 +15,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/analytics/{userId:[A-Za-z0-9]+}", a.GetAnalytics).Methods("GET") 
 	a.Router.HandleFunc("/analytics/all/{userId:[A-Za-z0-9]+}", a.GetAllAnalytics).Methods("GET") 
 	a.Router.HandleFunc("/new-user", a.CreateUser).Methods("POST")
+	a.Router.HandleFunc("/user/{userId:[A-Za-z0-9]+}", a.DeleteUser).Methods("DELETE")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.GetLastLogin).Methods("GET")
 	a.Router.HandleFunc("/last-login/{userId:[A-Za-z0-9]+}", a.UpdateLastLogin).Methods("PUT")
 	a.Router.HandleFunc("/dependencies/135/{userId:[A-Za-z0-9]+}", a.Update135).Methods("PUT")

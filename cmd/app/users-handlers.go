@@ -55,3 +55,24 @@ func (a *App) UpdateLastLogin(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "update successful"})
 }
+
+//deletes both from the users and alltasks table
+func (a *App) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	var uid string = mux.Vars(r)["userId"]
+
+	//the function order must be DeleteAllTasks before DeleteUser because of how
+	//the database is designed with PK and FK
+	err := models.DeleteAllTasks(a.DB, uid)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	err = models.DeleteUser(a.DB, uid)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "delete successful"})
+}

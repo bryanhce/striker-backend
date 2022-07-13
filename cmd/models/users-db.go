@@ -53,3 +53,17 @@ func UpdateLastLogin(db *sql.DB, userId string) error {
 
 	return nil
 }
+
+func DeleteUser(db *sql.DB, uid string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `DELETE FROM users WHERE id = ?`
+
+	_, err := db.ExecContext(ctx, query, uid)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
