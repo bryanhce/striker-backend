@@ -12,31 +12,47 @@ func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBrea
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	//initiall query was using GROUP BY for all the tasks type but this will fail
+	//if the user has yet to create one of the task types
 	query := `SELECT COUNT(id) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
-				GROUP BY taskType
-				UNION ALL
-				SELECT SUM(effort) FROM alltasks
-				WHERE userId = ? 
-				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
+				AND dailyLogdate < ?
+				AND taskType = 0
 				UNION ALL
 				SELECT COUNT(id) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
+				AND dailyLogdate < ?
+				AND taskType = 1
+				UNION ALL
+				SELECT COUNT(id) FROM alltasks
+				WHERE userId = ?
+				AND dailyLogDate >= ?
+				AND dailyLogdate < ?
+				AND taskType = 2
+				UNION ALL
+				SELECT SUM(effort) FROM alltasks
+				WHERE userId = ?
+				AND dailyLogDate >= ?
+				AND dailyLogdate < ?
+				UNION ALL
+				SELECT COUNT(id) FROM alltasks
+				WHERE userId = ?
+				AND dailyLogDate >= ?
+				AND dailyLogdate < ?
 				AND isCompleted = 1
 				UNION ALL
 				SELECT SUM(effort) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
-				AND dailyLogdate <= ?
+				AND dailyLogdate < ?
 				AND isCompleted = 1`
 
 
 	rows, err := db.QueryContext(ctx, query, 
+					userId, startDate, endDate,
+					userId, startDate, endDate,
 					userId, startDate, endDate,
 					userId, startDate, endDate,
 					userId, startDate, endDate,
@@ -131,7 +147,15 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 
 	query := `SELECT COUNT(id) FROM alltasks
 			WHERE userId = ?
-			GROUP BY taskType
+			AND taskType = 0
+			UNION ALL
+			SELECT COUNT(id) FROM alltasks
+			WHERE userId = ?
+			AND taskType = 1
+			UNION ALL
+			SELECT COUNT(id) FROM alltasks
+			WHERE userId = ?
+			AND taskType = 2
 			UNION ALL
 			SELECT SUM(effort) FROM alltasks
 			WHERE userId = ?
@@ -147,11 +171,12 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 			SELECT AVG(temp.taskCount) FROM (
 			SELECT COUNT(id) as taskCount from alltasks 
 			WHERE userId = ?
-			AND effort != NULL AND priority != NULL
+			AND effort IS NOT NULL 
+			AND priority IS NOT NULL
 			AND isCompleted = 1
 			GROUP BY dailyLogDate) as temp;`
 
-	rows, err := db.QueryContext(ctx, query, userId, userId, userId, userId, userId)
+	rows, err := db.QueryContext(ctx, query, userId, userId, userId, userId, userId, userId, userId)
 	if err != nil {
 		return nil, err
 	}
