@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+//does not get get data from database about avergeDailyTaskCompleted
+//but func handles the case and always returns 0
 func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBreakdown, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -25,13 +27,13 @@ func GetAnalytics(db *sql.DB, userId, startDate, endDate string) (*AnalyticsBrea
 				WHERE userId = ?
 				AND dailyLogDate >= ?
 				AND dailyLogdate <= ?
-				AND isCompleted = 0
+				AND isCompleted = 1
 				UNION ALL
 				SELECT SUM(effort) FROM alltasks
 				WHERE userId = ?
 				AND dailyLogDate >= ?
 				AND dailyLogdate <= ?
-				AND isCompleted = 0`
+				AND isCompleted = 1`
 
 
 	rows, err := db.QueryContext(ctx, query, 
@@ -136,11 +138,11 @@ func GetAllAnalytics(db *sql.DB, userId string) (*AnalyticsBreakdown, error) {
 			UNION ALL
 			SELECT COUNT(id) FROM alltasks
 			WHERE userId = ?
-			AND isCompleted = 0
+			AND isCompleted = 1
 			UNION ALL
 			SELECT SUM(effort) FROM alltasks
 			WHERE userId = ?
-			AND isCompleted = 0
+			AND isCompleted = 1
 			UNION ALL
 			SELECT AVG(temp.taskCount) FROM (
 			SELECT COUNT(id) as taskCount from alltasks 

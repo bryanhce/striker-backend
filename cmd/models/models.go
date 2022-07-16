@@ -2,10 +2,10 @@ package models
 
 import "database/sql"
 
-type Users struct {
-	UserId string `json:"userId"`
-	Dependencies string `json:"dependencies"`
-}
+// type Users struct {
+// 	UserId string `json:"userId"`
+// 	Dependencies string `json:"dependencies"`
+// }
 
 type SingleTask struct {
 	Id string `json:"id"`
