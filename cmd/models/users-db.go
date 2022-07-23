@@ -10,7 +10,7 @@ func CreateUser(db *sql.DB, userId, email string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "INSERT INTO `users` VALUES (?, ?, CURRENT_DATE(), false, false, false, false)"
+	query := "INSERT INTO `users` VALUES (?, ?, SUBSTRING_INDEX(CONVERT_TZ(CURRENT_DATE(),'+00:00','+08:00'), ' ', 1), false, false, false, false)"
 
 	_, err := db.ExecContext(ctx, query, userId, email)
 	if err != nil {
